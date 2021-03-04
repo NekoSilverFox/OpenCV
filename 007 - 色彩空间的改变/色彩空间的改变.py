@@ -16,3 +16,7 @@ hsv_img = cv.cvtColor(img, cv.COLOR_BGR2HSV)
 plt.imshow(hsv_img[:, :, ::-1])
 plt.show()
 
+# 模糊图像
+imgBlur = cv.GaussianBlur(img, (7, 7), 0)
+cv.imshow("Gary Image", imgBlur)
+cv.waitKey(0)
