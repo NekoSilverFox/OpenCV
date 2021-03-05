@@ -1,91 +1,144 @@
 import cv2 as cv
 import numpy as np
-import matplotlib.pyplot as plt
 from stackImages import stackImages
+
 
 CAM_WIDTH = 640
 CAM_HEIGHT = 480
 CAM_BRIGHTNESS = 150
+CAM_ID = 2
+PRINT_SIZE = 5
+PRINT_COLOR = (0, 255, 255)
+gl_path_mask = np.ones((CAM_HEIGHT, CAM_WIDTH, 3), dtype=np.uint8)
+gl_path_mask[:] = (255, 255, 255)
+# gl_path_mask = np.zeros((CAM_HEIGHT, CAM_WIDTH, 3), dtype=np.uint8)
+cv.imshow("t", gl_path_mask)
 
-
-def empty(A):
+def empty(none):
     pass
 
 
-def findColor():
-    cam = cv.VideoCapture(2)  # 这里的数字代表摄像头ID，如果有多个摄像头，请尝试更改这些ID
-
+def color_picker():
     # 设置摄像头的大小
+    cam = cv.VideoCapture(CAM_ID)  # 这里的数字代表摄像头ID
     cam.set(3, CAM_WIDTH)  # 第一个参数`3`代表 `宽度`
     cam.set(4, CAM_HEIGHT)  # 第一个参数`4`代表 `高度`
     cam.set(10, CAM_BRIGHTNESS)  # 第一个参数`10`代表 `亮度`
 
     # 跟踪杆
-    cv.namedWindow("TrackBars")
-    cv.resizeWindow("TrackBars", CAM_WIDTH, CAM_HEIGHT)
-    cv.createTrackbar("Hue Min", "TrackBars", 0, 179, empty)
-    cv.createTrackbar("Hue Max", "TrackBars", 179, 179, empty)
+    cv.namedWindow("HSY-TrackBars")
+    cv.resizeWindow("HSY-TrackBars", CAM_WIDTH, CAM_HEIGHT)
 
-    cv.createTrackbar("Sat Min", "TrackBars", 0, 255, empty)
-    cv.createTrackbar("Sat Max", "TrackBars", 255, 255, empty)
+    cv.createTrackbar("Hue Min", "HSY-TrackBars", 0, 179, empty)
+    cv.createTrackbar("Sat Min", "HSY-TrackBars", 0, 255, empty)
+    cv.createTrackbar("Val Min", "HSY-TrackBars", 0, 255, empty)
 
-    cv.createTrackbar("Val Min", "TrackBars", 0, 255, empty)
-    cv.createTrackbar("Val Max", "TrackBars", 255, 255, empty)
+    cv.createTrackbar("Hue Max", "HSY-TrackBars", 179, 179, empty)
+    cv.createTrackbar("Sat Max", "HSY-TrackBars", 255, 255, empty)
+    cv.createTrackbar("Val Max", "HSY-TrackBars", 255, 255, empty)
 
     #############################################################
 
     while True:
-        success, img = cam.read()
-        imgHSV = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-        h_min = cv.getTrackbarPos("Hue Min", "TrackBars")
-        h_max = cv.getTrackbarPos("Hue Max", "TrackBars")
+        is_success, img = cam.read()
+        img_HSV = cv.cvtColor(img, cv.COLOR_BGR2HSV)
 
-        s_min = cv.getTrackbarPos("Sat Min", "TrackBars")
-        s_max = cv.getTrackbarPos("Sat Max", "TrackBars")
+        h_min = cv.getTrackbarPos("Hue Min", "HSY-TrackBars")
+        h_max = cv.getTrackbarPos("Hue Max", "HSY-TrackBars")
 
-        v_min = cv.getTrackbarPos("Val Min", "TrackBars")
-        v_max = cv.getTrackbarPos("Val Max", "TrackBars")
+        s_min = cv.getTrackbarPos("Sat Min", "HSY-TrackBars")
+        s_max = cv.getTrackbarPos("Sat Max", "HSY-TrackBars")
+
+        v_min = cv.getTrackbarPos("Val Min", "HSY-TrackBars")
+        v_max = cv.getTrackbarPos("Val Max", "HSY-TrackBars")
         print(h_min, h_max, s_min, s_max, v_min, v_max)
 
+        # 将我们不需要的颜色设为黑色，需要的设为白色
         lower = np.array([h_min, s_min, v_min])
         upper = np.array([h_max, s_max, v_max])
-        mask = cv.inRange(imgHSV, lower, upper)
-        # 将我们不需要的颜色设为黑色，需要的设为白色
+        mask = cv.inRange(img_HSV, lower, upper)
+        img_result = cv.bitwise_and(img, img, mask=mask)
+        mask = cv.cvtColor(mask, cv.COLOR_GRAY2BGR)
 
-        imgResult = cv.bitwise_and(img, img, mask=mask)
-        imgStack = stackImages(0.6, ([img, mask, imgResult]))
-        cv.imshow("Stack images", imgStack)
+        img_stack = stackImages(0.6, ([img, mask, img_result]))
+        cv.imshow("Stack images", img_stack)
         cv.waitKey(1)
 
 
-def find_color(img_input, myColors):
-    imgHSV = cv.cvtColor(img_input, cv.COLOR_BGR2HSV)
-    lower = np.array(myColors[0][0:3])
-    upper = np.array(myColors[0][3:6])
-    mask = cv.inRange(imgHSV, lower, upper)
-    print(mask)
-    # 将我们不需要的颜色设为黑色，需要的设为白色
-    cv.imshow("img", mask)
+def print_path(mask):
+    pass
 
 
-cam = cv.VideoCapture(2)  # 这里的数字代表摄像头ID，如果有多个摄像头，请尝试更改这些ID
+def find_color(img_input, prick_colors_list, print_colors_list):
+    img_HSV = cv.cvtColor(img_input, cv.COLOR_BGR2HSV)
+    index_color = 0
+
+    for color in prick_colors_list:
+        lower = np.array(color[0:3])
+        upper = np.array(color[3:6])
+        mask = cv.inRange(img_HSV, lower, upper)
+
+        x, y = get_contours(mask)
+        cv.circle(img_result, (x, y), PRINT_SIZE, print_colors_list[index_color], -1)
+        cv.circle(gl_path_mask, (x, y), PRINT_SIZE, print_colors_list[index_color], -1)
+
+        index_color += 1
+        if index_color > 3:
+            print("ERROR! In dead loop!")
+
+        # print(mask)
+        # 将我们不需要的颜色设为黑色，需要的设为白色
+        cv.imshow("Mask", mask)
+
+
+def get_contours(img):
+    contours, hierarchy = cv.findContours(img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
+    x = 0
+    y = 0
+    w = 0
+    h = 0
+    for event in contours:
+        area = cv.contourArea(event)
+        if area > 500:
+            cv.drawContours(img_result, event, -1, (255, 0, 0), 3)
+            peri = cv.arcLength(event, True)
+            approx = cv.approxPolyDP(event, 0.02 * peri, True)
+            x, y, w, h = cv.boundingRect(approx)
+            print("Print point on [%d, %d]" % (x, y))
+    return (x + w // 2), (y + h // 2)
+
+
+##############################################################################
+
+# color_picker()
+
 # 设置摄像头的大小
+cam = cv.VideoCapture(CAM_ID)  # 这里的数字代表摄像头ID，如果有多个摄像头，请尝试更改这些ID
 cam.set(3, CAM_WIDTH)  # 第一个参数`3`代表 `宽度`
 cam.set(4, CAM_HEIGHT)  # 第一个参数`4`代表 `高度`
 cam.set(10, CAM_BRIGHTNESS)  # 第一个参数`10`代表 `亮度`
 
-myColors = [[127, 179, 99, 255, 25, 255],
-            [82, 159, 104, 255, 48, 255],  # Red
-            [106, 156, 58, 255, 99, 255]]  # peper
+picker_colors_list = [[0, 103, 255, 179, 255, 255],  # Red
+                      [104, 102, 134, 179, 255, 255]]  # Blue
 
-findColor()
+print_color_list = [[0, 0, 255],
+                    [255, 0, 0]]
+
 
 while True:
-    success, img = cam.read()
-    find_color(img, myColors)
-    cv.imshow("Res cam", img)
-    # plt.imshow(img[:, :, ::-1])
-    # plt.show()
+    is_success, img = cam.read()
+    img_result = img.copy()
+    find_color(img, picker_colors_list, print_color_list)
+    # img_result_with_path = cv.addWeighted(img, 1, gl_path_mask, 2, 1)
+    """
+    dst = src1*alpha + src2*beta + gamma
+    """
+    img[img[:, :, 1:].all(axis=-1)] = 0
+    gl_path_mask[gl_path_mask[:, :, 1:].all(axis=-1)] = 0
+    img_result_with_path = cv.addWeighted(img, 1, gl_path_mask, 1, 0)
+    # cv.imshow("Row camera", img)
+    cv.imshow("Result camera", img_result)
+    cv.imshow("Result camera with path", img_result_with_path)
 
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
