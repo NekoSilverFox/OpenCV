@@ -1,8 +1,11 @@
-from stackImages import *
+import cv2 as cv
+import numpy as np
+import matplotlib.pyplot as plt
+from stackImages import stackImages
 
 CAM_WIDTH = 640
 CAM_HEIGHT = 480
-CAM_BRIGHTNESS = 20
+CAM_BRIGHTNESS = 150
 
 
 def empty(A):
@@ -19,7 +22,7 @@ def findColor():
 
     # 跟踪杆
     cv.namedWindow("TrackBars")
-    cv.resizeWindow("TrackBars", 640, 240)
+    cv.resizeWindow("TrackBars", CAM_WIDTH, CAM_HEIGHT)
     cv.createTrackbar("Hue Min", "TrackBars", 0, 179, empty)
     cv.createTrackbar("Hue Max", "TrackBars", 179, 179, empty)
 
@@ -62,11 +65,7 @@ def find_color(img_input, myColors):
     mask = cv.inRange(imgHSV, lower, upper)
     print(mask)
     # 将我们不需要的颜色设为黑色，需要的设为白色
-    cv.imshow("img", imgHSV)
-    # cv.waitKey(1)
-    # print(mask)
-    # print(imgHSV)
-    # print(lower)
+    cv.imshow("img", mask)
 
 
 cam = cv.VideoCapture(2)  # 这里的数字代表摄像头ID，如果有多个摄像头，请尝试更改这些ID
@@ -75,13 +74,18 @@ cam.set(3, CAM_WIDTH)  # 第一个参数`3`代表 `宽度`
 cam.set(4, CAM_HEIGHT)  # 第一个参数`4`代表 `高度`
 cam.set(10, CAM_BRIGHTNESS)  # 第一个参数`10`代表 `亮度`
 
-myColors = [[0, 27, 255, 255, 80, 255],  # Red
-            [127, 160, 0, 255, 39, 255]]  # peper
-# findColor()
+myColors = [[127, 179, 99, 255, 25, 255],
+            [82, 159, 104, 255, 48, 255],  # Red
+            [106, 156, 58, 255, 99, 255]]  # peper
+
+findColor()
+
 while True:
     success, img = cam.read()
     find_color(img, myColors)
     cv.imshow("Res cam", img)
+    # plt.imshow(img[:, :, ::-1])
+    # plt.show()
 
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
