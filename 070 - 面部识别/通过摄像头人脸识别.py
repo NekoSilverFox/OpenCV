@@ -15,7 +15,7 @@ while True:
     imgGray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     face = faceCascade.detectMultiScale(imgGray, 1.1, 4)
     for (x, y, w, h) in face:
-        cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 8)
 
     cv.imshow("Video Cam", img)
 

@@ -129,8 +129,8 @@ while True:
     img_result_with_path = cv.addWeighted(img_row, 1, gl_path_mask, 1, 0)
 
     # cv.imshow("Row camera", img)
-    cv.imshow("Result camera", gl_img_result)
-    cv.imshow("Result path on canvas", gl_path_mask)
+    cv.imshow("Catch contours", gl_img_result)
+    cv.imshow("Result path on black canvas", gl_path_mask)
     cv.imshow("Result camera with path", img_result_with_path)
 
     if cv.waitKey(1) & 0xFF == ord('q'):
