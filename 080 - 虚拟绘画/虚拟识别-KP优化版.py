@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2021/3/6
+# @Author  : Meng Jianing
+# @FileName: 虚拟识别-KP优化版.py
+# @Software: Pycharm
+# @Versions: v0.1
+# @Github  ：https://github.com/NekoSilverFox
+# ~~~~~~~~~~~~~~~~~~~
+
 import cv2 as cv
 import numpy as np
 from stackImages import stackImages
@@ -5,7 +14,7 @@ from stackImages import stackImages
 CAM_WIDTH = 640
 CAM_HEIGHT = 480
 CAM_BRIGHTNESS = 150
-CAM_ID = 2
+CAM_ID = 0
 PRINT_SIZE = 5
 PRINT_COLOR = (255, 0, 0)
 gl_path_mask = np.zeros((CAM_HEIGHT, CAM_WIDTH, 3), dtype=np.uint8)
@@ -118,8 +127,8 @@ cam.set(4, CAM_HEIGHT)
 cam.set(10, CAM_BRIGHTNESS)
 
 # Используйте список для записи цветов, которые могут быть сопоставлены
-picker_colors_list = [[0, 103, 255, 179, 255, 255],  # Red
-                      [104, 102, 134, 179, 255, 255]]  # Blue
+picker_colors_list = [  # [0, 103, 255, 179, 255, 255],  # Red
+    [97, 34, 93, 179, 255, 255]]  # Blue
 
 while True:
     is_success, img_row = cam.read()
