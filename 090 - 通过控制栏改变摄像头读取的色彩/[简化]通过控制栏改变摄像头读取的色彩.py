@@ -36,7 +36,7 @@ cv2.createTrackbar("B", "TrackBars", 0, 255, empty)  # 蓝色色彩通道
 cv2.createTrackbar("Filter", "TrackBars", 0, 4, empty)  # 蓝色色彩通道
 cv2.createTrackbar("Blur", "TrackBars", 0, 255, empty)  # 高斯模糊
 
-cam = cv2.VideoCapture(1)  # 这里的数字代表摄像头ID，如果有多个摄像头，请尝试更改这些ID
+cam = cv2.VideoCapture(0)  # 这里的数字代表摄像头ID，如果有多个摄像头，请尝试更改这些ID
 WIDTH = 640
 HEIGHT = 480
 # 设置摄像头的大小
