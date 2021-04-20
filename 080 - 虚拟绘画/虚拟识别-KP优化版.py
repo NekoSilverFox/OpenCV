@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2021/3/6
-# @Author  : Meng Jianing
-# @FileName: 虚拟识别-KP优化版.py
+# @Author  : Мэн Цзянин
+# @FileName: KP15.py
 # @Software: Pycharm
-# @Versions: v0.1
+# @Versions: v0.3
 # @Github  ：https://github.com/NekoSilverFox
 # ~~~~~~~~~~~~~~~~~~~
 
@@ -11,6 +11,7 @@ import cv2 as cv
 import numpy as np
 from stackImages import stackImages
 
+# Определяет некоторые из необходимых констант
 CAM_WIDTH = 640
 CAM_HEIGHT = 480
 CAM_BRIGHTNESS = 150
@@ -24,6 +25,7 @@ def empty(none):
     pass
 
 
+# Для цветного экранирования
 def color_picker():
     # 设置摄像头的大小
     # Настройка размера камеры
@@ -33,6 +35,7 @@ def color_picker():
     cam.set(10, CAM_BRIGHTNESS)
 
     # 跟踪杆
+    # Создание трекер-бара
     cv.namedWindow("HSY-TrackBars")
     cv.resizeWindow("HSY-TrackBars", CAM_WIDTH, CAM_HEIGHT)
 
@@ -73,11 +76,13 @@ def color_picker():
         cv.waitKey(1)
 
 
+# Путь для рисования цветных блоков
 def print_path(x, y):
     cv.circle(gl_img_result, (x, y), PRINT_SIZE, PRINT_COLOR, -1)
     cv.circle(gl_path_mask, (x, y), PRINT_SIZE, PRINT_COLOR, -1)
 
 
+# Используется для поиска цветового блока заданного цвета.
 def find_color(img_input, prick_colors_list):
     img_HSV = cv.cvtColor(img_input, cv.COLOR_BGR2HSV)
     index_color = 0
@@ -92,7 +97,7 @@ def find_color(img_input, prick_colors_list):
 
         index_color += 1
         if index_color > 3:
-            print("ERROR! In dead loop!")
+            print("[ERROR] In dead loop!")
 
         # print(mask)
         cv.imshow("Mask", mask)
@@ -125,6 +130,7 @@ cam = cv.VideoCapture(CAM_ID)
 cam.set(3, CAM_WIDTH)
 cam.set(4, CAM_HEIGHT)
 cam.set(10, CAM_BRIGHTNESS)
+output = cv.VideoWriter("output.avi", cv.VideoWriter_fourcc("M", "J", "P", "G"), 29, (CAM_WIDTH, CAM_HEIGHT))
 
 # Используйте список для записи цветов, которые могут быть сопоставлены
 picker_colors_list = [  # [0, 103, 255, 179, 255, 255],  # Red
@@ -132,15 +138,25 @@ picker_colors_list = [  # [0, 103, 255, 179, 255, 255],  # Red
 
 while True:
     is_success, img_row = cam.read()
+    if not is_success:
+        print("[ERROR] Can not read camera!")
+        break
+
     gl_img_result = img_row.copy()
 
     find_color(img_row, picker_colors_list)
     img_result_with_path = cv.addWeighted(img_row, 1, gl_path_mask, 1, 0)
 
+    # Отображение изображений в виде окна
     # cv.imshow("Row camera", img)
     cv.imshow("Catch contours", gl_img_result)
     cv.imshow("Result path on black canvas", gl_path_mask)
     cv.imshow("Result camera with path", img_result_with_path)
+    output.write(img_result_with_path)
 
+    # Выход из программы с помощью клавиши `q` на клавиатуре
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
+
+cam.release()
+output.release()
