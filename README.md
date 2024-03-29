@@ -488,13 +488,180 @@ include(c:/dev/opencv/opencv.pri)
 
 
 
-# 第二章、
+# 第二章、创建我们的第一个 Qt 和 OpenCV 项目
+
+在本章中，我们将通过学习有关 Qt Creator IDE 的所有内容并学习如何使用它来开始我们的实践工作，因为我们在整本书中都会直接使用 Qt Creator 来构建任何项目。您将了解到它提供的所有优势，并了解为什么它在所有的简洁、外观和感觉上都是一个非常强大的 IDE。您将了解 Qt Creator 的设置和详细信息以及如何更改它们以满足您的需求。您还将了解 Qt 项目文件、源代码、用户界面等等。
+
+您应该注意，本章中学到的内容将帮助您在未来节省大量时间，但只有当您真正在您的计算机上重复执行所有内容并尝试始终使用它来进行使用 Qt Creator 进行 C++ 编程时，才会如此。
+
+最后，我们将通过创建一个实际的计算机视觉应用程序并对图像应用一些基本的图像处理算法来结束本章。**本章的目标是为您准备好本书的其余部分，并使您熟悉您在整本书中将遇到的一些关键字，如信号、槽、小部件等。**
+
+在本章中，我们将涵盖以下主题：
+
+- 配置和使用 Qt Creator IDE
+- 创建 Qt 项目
+- Qt Creator 中的小部件
+- 创建跨平台的 Qt+OpenCV 项目文件
+- 使用 Qt Creator 设计用户界面
+- 使用 Qt Creator 为用户界面编写代码
+
+## 什么是 Qt Creator？
+
+**Qt Creator 与 Qt 框架不是一回事，它只是由 Qt 框架创建的一个 IDE**。以下是 Qt Creator 的欢迎模式的屏幕截图：
+
+<img src="doc/img/ea50a35d-77a4-4b97-b23d-19f54a2a8421.png" style="zoom:50%;" />
+
+请注意，我们并不一定会使用 Qt Creator 的所有功能，但在更深入地了解之前了解它的功能是个好主意。以下是 Qt Creator 的一些最重要的特性：
+
+- 使用会话管理多个 IDE 状态
+- 管理多个 Qt 项目
+- 设计用户界面
+- 编辑代码
+- 在所有 Qt 支持的平台上构建和运行应用程序
+- 调试应用程序
+- 上下文相关帮助
+
+根据您认为重要的内容，您可能可以将此列表扩展为更多项目，但在上述列表中提到的内容本质上是 IDE（集成开发环境）的定义，它应该是一个提供应用程序开发所需的所有必要工具的应用程序。此外，您还可以随时查看 Qt Creator 的额外功能的 Qt 文档。
+
+**Qt 框架对标准 C++ 编程的最重要添加是信号和插槽机制**，这也是使 Qt 如此易于学习且功能强大的原因。 这绝对也是 Qt 与其他框架之间最重要的区别。 **可以将它视为 Qt 对象和类之间的消息传递方法（或顾名思义，只是发出信号）。 每个 Qt 对象都可以发出可以连接到另一个（或相同）对象中的插槽的信号。** 让我们通过一个简单的例子进一步分解它。 `QPushButton`是一个 Qt 小部件类，您可以将其添加到 Qt 用户界面中以创建按钮。 它包含许多信号，包括明显的按下信号。 另一方面，在我们创建`Hello_Qt_OpenCV`项目时自动创建的`MainWindow`（以及所有 Qt 窗口）包含一个名为`close`的插槽，可用于简单地关闭项目的主窗口。我相信您可以想象如果将按钮的按下信号连接到窗口的关闭插槽会发生什么。 有很多方法可以将信号连接到插槽，因此，从现在开始，在本书的其余部分中，只要需要在示例中使用它们，我们就会学习它们的每一种。
+
+## 设计用户界面
+
+> ！！！！关于设计用户界面，更多和更详细的说明请参考这里：https://github.com/NekoSilverFox/Qt ！！！！
+
+从这里开始学习如何将 Qt 小部件添加到用户界面，并使它们对用户输入和其他事件做出反应。 Qt Creator 提供了非常简单的工具来设计用户界面并为其编写代码。您已经看到了设计模式下可用的不同窗格和工具，因此我们可以从示例开始。 通过选择`mainwindow.ui`文件（这是我们从编辑模式进入主窗口的用户界面文件），确保首先切换到设计模式（如果尚未进入设计模式）。
+
+在设计模式下，您可以在用户界面上查看可使用的 Qt 小部件列表。从这些图标和名称可以立即识别出大多数这些小部件的用途，但是仍然有一些特定于 Qt 的小部件。 这是默认情况下 Qt Creator 中代表所有可用布局和小部件的屏幕截图：
+
+![](doc/img/b2a3d25a-3b8b-4c34-bd86-82756775c599-1311573.png)
+
+---
+
+Qt 窗口共有 3 种不同类型的条（实际上，一般来说是 Windows），它们在小部件工具箱中不可用，但是可以通过右键单击 Windows 中的窗口来创建，添加或删除它们。 设计器模式，然后从右键菜单中选择相关项目。 它们是：
+
+<img src="doc/img/image-20240325000503738.png" alt="image-20240325000503738" style="zoom:50%;" />
+
+1. 菜单栏（`QMenuBar`）**菜单栏**是显示在窗口顶部的典型水平主菜单栏。 菜单中可以有任意数量的项目和子项目，每个项目和子项目都可以触发一个动作（`QAction`）。 您将在接下来的章节中了解有关操作的更多信息。 以下是菜单栏示例：
+
+![](doc/img/3f2ff1ec-225f-482f-8382-324c193748a7-1311573.png)
+
+2. 工具栏（`QToolBar`）**工具栏**是一个**可移动面板**，其中可以包含与特定任务相对应的工具按钮。 这是一个示例工具栏。 请注意，它们可以在 Qt 窗口内移动甚至移出：
+
+![](doc/img/8ed42c6f-df0f-459f-a29d-692cd7a0cd04-1311573.png)
+
+3. 状态栏（`QStatusBar`) 状态栏**是底部的一个简单的水平信息栏，对于大多数基于窗口的应用是通用的。 **
+
+**每当在 Qt 中创建一个新的主窗口时，这三种类型的条形都将添加到该窗口中。 **请注意，一个窗口上只能有一个菜单栏和一个状态栏，但是可以有任意数量的状态栏。 如果不需要它们，则需要将它们从“设计器”窗口右侧的对象层次结构中删除。** 现在您已经熟悉了 Qt 中的三个不同的条形，可以从“Qt 欢迎”模式中的示例中搜索`Application Example`，以进一步了解它们，以及是否可以进一步自定义它们。
+
+---
+
+以下是对 Qt Creator 设计模式（或从现在开始简称为 Designer）中可用小部件的简要说明，如前面的屏幕快照所示。 在设计器模式下，小部件基于其行为的相似性进行分组。 在继续进行列表操作时，请自己亲自尝试设计器中的每个功能，以感觉到将它们放置在用户界面上时的外观。 为此，您可以使用设计器模式将每个窗口小部件拖放到窗口上：
+
+* **Layouts - 布局**：这些布局用于管理窗口小部件的显示方式。在外观上，它们是不可见的（因为它们不是`QWidget`子类），并且它们仅影响添加到它们的小部件。 请注意，布局根本不是小部件，它们是用来管理小部件的显示方式的逻辑类。 尝试在用户界面上放置任何布局小部件，然后在其中添加一些按钮或显示小部件，以查看其布局如何根据布局类型进行更改。 查看每个示例图片以了解它们的行为。
+
+    <img src="doc/img/image-20240324234655285.png" alt="image-20240324234655285" style="zoom:50%;" />
+
+    | 布局（英）        | 布局（中） | 说明                                                         | 效果                                                         | Qt等价类（相当于哪个类） |
+    | ----------------- | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------ |
+    | Vertical Layout   | 垂直布局   | 它们用于具有垂直布局，即一列小部件                           | ![](doc/img/03a51bca-a3cd-471b-a05b-3f51dbd80cec-1311573.png) | `QVBoxLayout`            |
+    | Horizontal Layout | 水平布局   | 用于水平排列小部件                                           | ![](doc/img/277d207f-a502-4427-b93f-edfbb10acda1-1311573.png) | `QHBoxLayout`            |
+    | Grid Layout       | 网格布     | 可用于创建具有任意行和列数的小部件网格                       | ![](doc/img/0ed52881-f4f9-4d6a-a812-5fccd5d1523f-1311573.png) | `QGridLayout`            |
+    | Form Layout       | 表单布局   | 可用于使用一些标签和它们对应的输入小部件呈现类似**表单的外观**（2列n行，并且其中某一行可以对应多个列）。想象一下填写表单，您就会明白 | ![](doc/img/01e370dc-fbb7-4018-b736-302ef72ceb75-1311573.png) | `QFormLayout`            |
+
+       
+
+* **Spacers - 分隔符**：类似于弹簧，它们在视觉上不可见，但会影响将其他窗口小部件添加到布局时的显示方式。在用户更改窗口大小时候小控件间隙可以动态缩放。间隔符的类型为`QSpacerItem`，但是通常，它们绝不能直接在代码中使用。
+
+    | 分隔符（英）      | 分隔符（中） | 效果                                                         |
+    | ----------------- | ------------ | ------------------------------------------------------------ |
+    | Horizontal Spacer | 水平分隔符   | ![image-20240326195926664](doc/img/01e464f9-6116-4ff8-b3f6-e79437eed75e-1311573.png) |
+    | Vertical Spacer   | 垂直分隔符   | ![image-20240326195931201](doc/img/c90d84a7-39e2-4d85-9943-e79f63649ebd-1311573.png) |
+
+    ---
+
+    
+
+* **Buttons - 按钮**：这些只是按钮。 它们用于提示操作。 您可能会注意到，单选按钮和复选框也在该组中，这是因为它们都继承自`QAbstractButton`类，该类是一个抽象类，提供了类按钮小部件所需的所有接口。
+
+    | 控件                                                         | 效果                                                         | 说明                                                         |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | 文字按钮 [![image-20221130164311887](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130164311887.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130164311887.png) | [![image-20221130164629710](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130164629710.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130164629710.png) | 文字按钮（可设置图标）                                       |
+    | 图标按钮 [![image-20221130164712179](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130164712179.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130164712179.png) | [![image-20221130165040902](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130165040902.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130165040902.png) | 多用于**只显示图标**的按钮，可配置是否是透明风格或者显示按钮文字 [![image-20221130165149890](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130165149890.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130165149890.png) |
+    | 单选框 [![image-20221130165204798](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130165204798.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130165204798.png) | [![image-20221130165733293](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130165733293.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130165733293.png) | 可与 Group Box 搭配使用进行分组，避免交叉 可使用代码设置默认选中那个 `ui->rBtnMan->setChecked(true)` （此小部件的等效 Qt 类称为`QCommandLinkButton`） |
+    | 多选框、复选框 [![image-20221130165745758](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130165745758.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130165745758.png) | [![image-20221130233207709](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130233207709.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130233207709.png) | 可与 Group Box 搭配使用进行分组，根据是否选中有不同的状态（State） `0 - 未选中`，`1 - 半选中`，`2 - 全选中`。可作为 `Qt::QCheckBox::stateChanged` 进行监听，但是要想让复选框支持半选中需要开启以下选项： [![image-20221130230942923](https://github.com/NekoSilverFox/Qt/raw/main/doc/pic/README/image-20221130230942923.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/pic/README/image-20221130230942923.png) |
+    | 命令链接按钮 [![image-20240325002753950](https://github.com/NekoSilverFox/Qt/raw/main/doc/img/image-20240325002753950.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/img/image-20240325002753950.png) |                                                              | 【不常用】这是一个 Windows Vista 风格的命令链接按钮。它们基本上是推按钮，旨在替代向导中的单选按钮，因此，当按下命令链接按钮时，它类似于在向导对话框上使用单选框选择选项，然后单击“下一步”（相当于 Qt 中的 QCommandLinkButton 类）。 |
+    | 对话框按钮框 [![image-20240325003038151](https://github.com/NekoSilverFox/Qt/raw/main/doc/img/image-20240325003038151.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/img/image-20240325003038151.png) | [![image-20240325003017933](https://github.com/NekoSilverFox/Qt/raw/main/doc/img/image-20240325003017933.png)](https://github.com/NekoSilverFox/Qt/blob/main/doc/img/image-20240325003017933.png) | 如果您希望您的按钮在对话框中适应操作系统的样式，那么这个功能非常有用。它有助于以更适合当前系统样式的方式在对话框上呈现按钮（相当于 Qt 中的 `QDialogButtonBox` 类）。 |
+
+---
+
+> https://cloud.tencent.com/developer/article/1845045
+>
+> Item Views（表项视图）和Item Widgets（部件）区别
+>
+> - **两者的关系**：Item Views（Model-Based）类内的控件是Item Widgets（Item-Based）内对应控件的父类，如QTreeWidget是从QTreeView派生的。
+> - **两者的区别**：
+>     - Item Views（Model-Based）的对象进行数据操作相对比较复杂，但**处理及展示[大数据](https://cloud.tencent.com/solution/bigdata?from_column=20065&from=20065)量时性能高**；
+>     - Item Widgets的数据操作比较简单，但处理及展示大数据量时性能相对低。Item Widgets在开发中没有Item Views灵活，实际上Item Widgets就是在Item Views的基础上绑定了一个默认的存储并提供了相关方法。
+
+* **项目==视图==（基于模型）Item Views (Model-based)**：这基于**模型-视图-控制器（MVC, Model-view-controller）设计模式**； 它们可用于表示不同类型容器中的模型数据。
+
+    如果您完全不熟悉 MVC 设计模式，那么我建议您在这里停顿一下，首先通读一本综合性的文章，以确保至少对它是什么以及如何使用 MVC（尤其是 Qt）有一个基本的了解。 **阅读 Qt 文档中名为“[模型/视图编程（Model/View Programming）](https://doc.qt.io/qt-6/model-view-programming.html)”的文章**。 出于本书的目的，我们不需要非常详细的信息和对 MVC 模式的理解。 但是，由于它是非常重要的架构，您肯定会在以后的项目中遇到它，因此我建议您花一些时间来学习它。 不过，在第 3 章，“创建全面的 Qt + OpenCV 项目”中，我们将介绍 Qt 和 OpenCV 中使用的不同设计模式。
+
+    - **列表视图 - List View**：这以一个简单的列表形式展示模型中的项，没有任何层次结构（对应的Qt类为`QListView`）。
+    - **树视图 - Tree View**：这以层次化的树视图展示模型中的项。（对应的Qt类为`QTreeView`）。
+    - **表视图 - Table View**：这用于以表格形式展示模型中的数据，可以有任意数量的行和列。这在展示SQL数据库或查询的表格时特别有用（对应的Qt类为`QTableView`）。
+    - **列视图 - Column View**：这与列表视图相似，不同之处在于列视图还展示存储在模型中的层次化数据（对应的Qt类为`QColumnView`）。
+    - **撤销视图 - Undo View**：`QUndoView` 是一个展示撤销堆栈内容的Qt小部件。通过点击视图中的命令，可以使文档的状态向前或向后回滚到该命令。这提供了一个直观的方式，让用户可以轻松地浏览并选择撤销或重做的操作。更多详情，请访问[官方文档](https://doc.qt.io/qt-6/qundoview.html#details)。
+
+---
+
+*   **项目小部件（基于项目）Item Widgets (Item-Based)**：这类似于基于模型的项目视图，不同之处在于它们不是基于 MVC 设计模式，并且它们提供了简单的 API 来添加，删除或修改他们的项目
+    *   **列表小部件 - List Widget**：类似于列表视图，但是具有基于项目的 API，可以添加，删除和修改其项目（此小部件的等效 Qt 类称为`QListWidget`）
+    *   **树形小部件 - Tree Widget**：这类似于树形视图，但具有基于项目的 API，可以添加，删除和修改其项目（此小部件的等效 Qt 类称为`QTreeWidget`）
+    *   **表格小部件 - Table Widget**：这类似于表视图，但是具有基于项目的 API，用于添加，删除和修改其项目（此窗口小部件的等效 Qt 类称为`QTableWidget`）
+
+---
 
 
 
+*   **输入小部件**：听起来完全一样。 您可以使用以下小部件获取用户输入数据。
+    *   **组合框**：有时称为下拉列表； 它可以用来选择列表中的选项，而屏幕上的空间却很少。 任何时候，只有选定的选项可见。 用户甚至可以输入自己的输入值，具体取决于其配置。 （此小部件的等效 Qt 类称为`QComboBox`）：
+    *   **字体组合框**：类似于组合框，但可用于选择字体系列。 字体列表是使用计算机上的可用字体创建的。
+    *   **行编辑**：可用于输入和显示单行文本（此小部件的等效 Qt 类称为`QLineEdit`）。
+    *   **文本编辑**：可用于输入和显示多行富文本格式。 重要的是要注意，这个小部件实际上是成熟的 WYIWYG 富文本编辑器（此小部件的等效 Qt 类称为`QTextEdit`）。
+    *   **纯文本编辑**：可用于查看和编辑多行文本。 可以将其视为类似于记事本的简单小部件（此小部件的等效 Qt 类称为`QPlainTextEdit`）。
+    *   **旋转框**：用于输入整数或离散的值集，例如月份名称（此小部件的等效 Qt 类称为`QSpinBox`）。
+    *   **双重旋转框**：类似于旋转框，但是它接受双精度值（此小部件的等效 Qt 类称为`QDoubleSpinBox`）。
+    *   **时间编辑**：可用于输入时间值。（此小部件的等效 Qt 类称为`QTimeEdit`）。
+    *   **日期编辑**：可用于输入日期值（此小部件的等效 Qt 类称为`QDateEdit`）。
+    *   **日期/时间编辑**：可用于输入日期和时间值（此小部件的等效 Qt 类称为`QDateTimeEdit`）。
+    *   **拨盘**：类似于滑块，但具有圆形和类似拨盘的形状。 它可用于输入指定范围内的整数值（此小部件的等效 Qt 类称为`QDial`）。
+    *   **水平/垂直条**：可用于添加水平和垂直滚动功能（此小部件的等效 Qt 类称为`QScrollBar`）。
+    *   **水平/垂直滑块**：可用于输入指定范围内的整数值（此小部件的等效 Qt 类称为`QSlider`）。
+    *   **按键序列编辑**：可用于输入键盘快捷键（此小部件的等效 Qt 类称为`QKeySequenceEdit`）。
 
+不应将此与`QKeySequence`类混淆，该类根本不是小部件。 `QKeySequenceEdit`用于从用户那里获取`QKeySequence`。 在拥有`QKeySequence`之后，我们可以将其与`QShortcut`或`QAction`类结合使用以触发不同的函数/插槽。 本章稍后将介绍信号/插槽的介绍。
 
+---
 
+- **显示小部件**：可用于显示输出数据，如数字、文本、图片、日期等：
+  - **标签**：可用于显示数字、文本、图片或电影（此小部件对应的 Qt 类称为 `QLabel`）。
+  - **文本浏览器**：与文本编辑小部件几乎相同，但增加了在链接之间导航的功能（此小部件对应的 Qt 类称为 `QTextBrowser`）。
+  - **图形视图**：可用于显示图形场景的内容（此小部件对应的 Qt 类称为 `QGraphicsView`）。
+
+我们在本书中将会使用到的最重要的小部件可能是图形场景（或 `QGraphicsScene`），并且将在[第5章](#23154d9b-43b1-411a-874a-d82e2a904927.xhtml)，*图形视图框架*中进行介绍。
+
+- **日历小部件**：可用于从月历中查看和选择日期（此小部件对应的 Qt 类称为 `QCalendarWidget`）。
+  - **LCD数字**：可用于在类似LCD的显示屏上显示数字（此小部件对应的 Qt 类称为 `QLCDNumber`）。
+  - **进度条**：可用于显示垂直或水平的进度指示器（此小部件对应的 Qt 类称为 `QProgressBar`）。
+  - **水平/垂直线**：可用于绘制简单的垂直或水平线。特别适用于不同小部件组之间的分隔线。
+  - **OpenGL小部件**：此类可用作渲染OpenGL输出的表面（此小部件对应的 Qt 类称为 `QOpenGLWidget`）。
+
+请注意，OpenGL是计算机图形学中一个完全独立和高级的主题，完全超出了本书的范围；然而，如前所述，了解Qt中存在的工具和小部件对于可能的进一步学习是一个好主意。
+
+- **QQuickWidget**：此小部件可用于显示Qt Quick用户界面。Qt Quick界面使用QML语言来设计用户界面（此小部件对应的 Qt 类称为 `QQuickWidget`）。
+
+[第12章](#b9aca949-902f-4857-bcd8-10e894b060f1.xhtml)，*Qt Quick应用程序*中将介绍QML。现在，让我们确保我们的用户界面中不添加任何QQuickWidget小部件，因为我们需要向项目中添加额外的模块才能使其工作。如何向Qt项目中添加模块将在本章中介绍。
 
 
 
