@@ -488,7 +488,9 @@ include(c:/dev/opencv/opencv.pri)
 
 
 
-# 第二章、创建我们的第一个 Qt 和 OpenCV 项目
+# 第二章、Qt 控件介绍
+
+> Qt 详细的介绍请参考：https://github.com/NekoSilverFox/opencv
 
 在本章中，我们将通过学习有关 Qt Creator IDE 的所有内容并学习如何使用它来开始我们的实践工作，因为我们在整本书中都会直接使用 Qt Creator 来构建任何项目。您将了解到它提供的所有优势，并了解为什么它在所有的简洁、外观和感觉上都是一个非常强大的 IDE。您将了解 Qt Creator 的设置和详细信息以及如何更改它们以满足您的需求。您还将了解 Qt 项目文件、源代码、用户界面等等。
 
@@ -664,6 +666,351 @@ Qt 窗口共有 3 种不同类型的条（实际上，一般来说是 Windows）
 [第12章](#b9aca949-902f-4857-bcd8-10e894b060f1.xhtml)，*Qt Quick应用程序*中将介绍QML。现在，让我们确保我们的用户界面中不添加任何QQuickWidget小部件，因为我们需要向项目中添加额外的模块才能使其工作。如何向Qt项目中添加模块将在本章中介绍。
 
 
+
+# 第三章、创建我们的第一个 Qt 和 OpenCV 项目
+
+## 创建工程
+
+现在，我们可以开始为我们的 Hello_Qt_OpenCV 项目设计用户界面了。对于一个项目来说，拥有一份清晰的规格说明书总是一个好主意，然后根据需求设计一个用户友好的UI，先在一张纸上（或者如果项目不大的话，在你的脑海中）画出用户界面，最后开始使用 Designer 创建它。当然，这个过程需要对现有的 Qt 小部件有经验，同时也需要足够的经验来创建你自己的小部件，但这是最终会发生的事情，你只需要继续练习就可以了。
+
+因此，首先，让我们来看看我们**需要开发的应用程序的规格说明**。比如说：
+
+- 这个应用程序必须能够接受图像作为输入（接受的图像类型至少应该包括 *.jpg、*.png 和 *.bmp 文件）。
+- 这个应用程序必须能够应用模糊滤镜。用户必须能够选择中值模糊或高斯模糊类型来过滤输入图像（使用默认的参数集）。
+- 这个应用程序必须能够保存输出图像，而且输出图像的文件类型（或者换句话说，扩展名）必须可以由用户选择（*.jpg、*.png 或 *.bmp）。
+- 用户应该能够在保存时可选地查看输出图像。
+- 用户界面上设置的所有选项，包括模糊滤镜类型和最后打开和保存图像文件，应该在应用程序重新启动时被保留和重新加载。
+- 当用户想要关闭应用程序时，应该提示用户。
+
+这对我们的案例来说应该足够了。通常，你不应该超出或不满足需求。这是设计用户界面时的一个重要规则。这意味着你应该确保所有需求都被成功满足，同时，你没有添加任何不需要的东西（或者在需求列表中不需要的东西）。
+
+对于这样一份需求列表（或规格说明），可以有无数种用户界面设计；然而，这里是我们将要创建的一个。请注意，这是我们的程序执行时的外观。显然，标题栏和样式可能因操作系统而异，但基本上就是这样：
+
+![](doc/img/a9d09830-17fe-4be0-9970-b3dc3631da9c.png)
+
+尽管它看起来可能很简单，但它包含了这样一个任务所需的所有必要组件，界面几乎是不言自明的。因此，打算使用这个应用程序的人实际上不需要知道很多关于它的功能，他们可以简单地猜测所有输入框、单选按钮、复选框等的用途。
+
+这是在 Designer 中查看同一UI时的样子：
+
+![](doc/img/207946ce-73a4-4581-9ece-2e4eed7e2511.png)
+
+是时候为我们的项目创建用户界面了：
+
+1. 创建这个用户界面，你需要首先从主窗口中移除菜单栏、状态栏和工具栏，因为我们不需要它们。右键点击顶部的菜单栏并选择移除菜单栏。接下来，在窗口的任何位置右键点击并选择移除状态栏。最后，右键点击顶部的工具栏并点击移除工具栏。
+2. 现在，在你的窗口中添加一个水平布局；这就是前面图片顶部可见的布局。然后，在其中添加一个标签、行编辑和推送按钮，如前图所示。
+
+3. 通过双击标签并输入`Input Image :`来更改标签的文本。 （这与选择标签并使用屏幕右侧的属性编辑器将文本属性值设置为`Input Image :`相同。）
+
+几乎所有具有`text`属性的 Qt 小部件都允许使用其文本进行这种类型的编辑。 因此，从现在开始，当我们说`Change the text of the widget X to Y`时，这意味着双击并设置文本或使用设计器中的属性编辑器。 我们可以很容易地将此​​规则扩展到属性编辑器中可见的窗口小部件的所有属性，并说`Change the W of X to Y`。 在这里，显然，`W`是设计者的属性编辑器中的属性名称，`X`是小部件名称，`Y`是需要设置的值。 这将在设计 UI 时为我们节省大量时间。
+
+4.  添加一个组框，然后添加两个单选按钮，类似于上图所示。
+5.  接下来，添加另一个水平布局，然后在其中添加`Label`，`Line Edit`和`Push Button`。 这将是在复选框正上方的底部看到的布局。
+
+6. 最后，在窗口中添加一个复选框。这是底部的复选框。
+7. 现在，根据前面的图片更改窗口上所有小部件的文本。你的 UI 几乎准备好了。你现在可以通过点击屏幕左下角的运行按钮来尝试运行它。确保你没有按带有错误的运行按钮。这是按钮：
+
+![](doc/img/b123b1f9-9824-41bf-9842-6e16c91cdb9d.png)
+
+这将产生与您之前看到的相同的用户界面。现在，如果您尝试调整窗口的大小，您会注意到在调整窗口大小或最大化窗口时，所有内容都保持原样，并且它不会响应应用大小的更改。 要使您的应用窗口响应大小更改，您需要为`centralWidget`设置布局。 还需要对屏幕上的分组框执行此操作。
+
+Qt 小部件均具有`centralWidget`属性。 这是 Qt 设计器中特别用于 Windows 和容器小部件的东西。 使用它，您可以设置容器或窗口的布局，而无需在中央窗口小部件上拖放布局窗口小部件，只需使用设计器顶部的工具栏即可：
+
+![](doc/img/59ecd372-42c2-438d-b3bc-e00bf89a2ea6-1722741.png)
+
+您可能已经注意到工具栏中的四个小按钮（如前面的屏幕快照所示），它们看起来与左侧小部件工具箱中的布局完全一样（如下所示）：
+
+![](doc/img/86f528aa-36f4-4362-9238-282c7e1ddf73-1722741.png)
+
+因此，让我们就整本书中的简单快速解释达成另一条规则。 每当我们说`Set the Layout of X to Y`时，我们的意思是首先选择小部件（实际上是容器小部件或窗口），然后使用顶部工具栏上的布局按钮选择正确的布局类型。
+
+8.  根据前面信息框中的描述，选择窗口（这意味着，单击窗口上的空白而不是任何小部件上的空白）并将其布局设置为`Vertical`。
+9.  对组框执行相同操作； 但是，这一次，将布局设置为水平。 现在，您可以尝试再次运行程序。 如您现在所见，它会调整其所有小部件的大小，并在需要时移动它们，以防更改窗口大小。 窗口内的组框也发生了同样的情况。
+
+10.  接下来需要更改的是小部件的`objectName`属性。 这些名称非常重要，因为在 C++ 代码中使用它们来访问窗口上的小部件并与其进行交互。 对于每个小部件，请使用以下屏幕截图中显示的名称。 请注意，该图像显示了对象层次结构。 您还可以通过双击对象层次结构窗格中的小部件来更改`objectName`属性：
+
+![image-20240329175751918](doc/img/image-20240329175751918.png)
+
+从理论上讲，您可以为`objectName`属性使用任何 C++ 有效的变量名，但实际上，最好始终使用有意义的名称。考虑对本书中使用的变量或小部件名称遵循相同或相似的命名约定。它基本上是 Qt 开发人员遵循的命名约定，它还有助于提高代码的可读性。
+
+
+
+## 编写 Qt 项目的代码
+
+现在我们的用户界面已经完全设计好了，我们可以开始为我们的应用程序编写代码了。目前，我们的应用程序基本上只不过是一个用户界面，并且实际上什么也做不了。我们需要从将 OpenCV 添加到我们的项目开始。在*第1章 OpenCV 和 Qt 的介绍*中，你已经简要了解了如何将 OpenCV 添加到 Qt 项目中。现在，我们将更进一步，**确保我们的项目可以在三大主流操作系统上编译和构建。**
+
+因此，首先在代码编辑器中打开项目的 `.pro` 文件。将以下代码添加到这个文件的末尾：
+
+```cpp
+ win32: { 
+    include("c:/dev/opencv/opencv.pri") 
+ } 
+
+ unix: !macx { 
+    CONFIG += link_pkgconfig 
+    PKGCONFIG += opencv 
+ } 
+
+ unix: macx { 
+   INCLUDEPATH += "/usr/local/include" 
+   LIBS += -L"/usr/local/lib" \ 
+    -lopencv_world 
+ } 
+```
+
+注意右括号前的代码； `win32`表示 Windows 操作系统（仅适用于桌面应用，不适用于 Windows 8、8.1 或 10 特定应用），`unix: !macx`表示 Linux 操作系统，`unix: macx`表示 MacOS 操作系统。
+
+您的`PRO`文件中的这段代码允许 OpenCV 包含在内并在您的 Qt 项目中可用。 还记得我们在第 1 章，“OpenCV 和 Qt 简介”中创建了一个`PRI`文件吗？ Linux 和 MacOS 用户可以将其删除，因为在那些操作系统中不再需要该文件。 只有 Windows 用户可以保留它。
+
+请注意，在 Windows OS 中，您可以将前面的`include`行替换为 `PRO` 文件的内容，但这在实践中并不常见。 另外，值得提醒的是，您需要在`PATH`中包含 OpenCV DLLs 文件夹，否则当您尝试运行它时，应用将崩溃。 但是，它仍然可以正确编译和构建。 要更加熟悉 Qt `PRO` 文件的内容，可以在 Qt 文档中搜索`qmake`并阅读有关内容。 不过，我们还将在第 3 章，“创建综合的 Qt + OpenCV 项目”中进行简要介绍。
+
+我们不会讨论这些代码行在每个操作系统上的确切含义，因为这不在本书的讨论范围之内，但是值得注意并足以知道何时构建应用（换句话说，编译、编译、链接），这些行将转换为所有 OpenCV 头文件，库和二进制文件，并包含在您的项目中，以便您可以轻松地在代码中使用 OpenCV 函数。
+
+
+
+现在我们已经完成了配置工作，让我们开始为用户界面上的每个需求及其相关的小部件编写代码。 让我们从`inputPushButton`开始。
+
+从现在开始，我们将使用其唯一的`objectName`属性值引用用户界面上的任何窗口小部件。 将它们视为可以在代码中使用以访问这些小部件的变量名。
+
+这是我们项目的编码部分所需的步骤：
+
+1.  再次切换到设计器，然后右键单击`inputPushButton`。 然后，从出现的菜单中选择“转到插槽...”。 将显示的窗口包括此小部件发出的所有信号。 选择`pressed()`，然后单击确定：
+
+![](doc/img/fdabfeaf-d0a1-47d7-966b-d384aa1a8c31-1724430.png)
+
+2.  您会注意到，您是从设计器自动转到代码编辑器的。 另外，现在`mainwindow.h`文件中添加了新函数。
+3.  在`mainwindow.h`中，添加了以下内容：
+
+```cpp
+private slots: 
+  void on_inputPushButton_clicked(); 
+```
+
+这是自动添加到`mainwindow.cpp`的代码：
+
+```cpp
+void MainWindow::on_inputPushButton_clicked() 
+{ } 
+```
+
+因此，显然需要在刚刚创建的`on_inputPushButton_pressed()`函数中编写负责`inputPushButton`的代码。 如本章前面所述，这是将信号从小部件连接到另一个小部件上的插槽的多种方法之一。 让我们退后一步，看看发生了什么。 同时，请注意刚刚创建的函数的名称。 `inputPushButton`小部件具有一个称为**被按下的信号 signal**（因为它是一个按钮），该信号仅在被按下时才发出。 在我们的单个窗口小部件（`MainWindow`）中创建了一个新插槽，称为`on_inputPushButton_clicked`。总而言之，每当`inputPushButton`小部件发出按下信号时，Qt 都会自动理解它需要在`on_inputPushButton_clicked()`中执行代码。 
+
+在 Qt 开发中，这被称为**按名称**连接插槽slots，它仅遵循以下约定**自动**将信号连接至插槽`on_OBJECTNAME_SIGNAL(PARAMETERS)`。
+
+在此，`OBJECTNAME`应该替换为发送信号的小部件的`OBJECTNAME`属性的值，`SIGNAL`替换为信号名称，`PARAMETERS`替换为确切的信号编号和参数类型。
+
+> 但是注意，这种创建方式是不推荐的，因为这是使用 **Qt 的==自动连接机制==**：
+>
+> 在Qt中，存在一种自动连接信号和槽的机制，这是通过QObject的`QMetaObject::connectSlotsByName()`函数实现的。当一个QWidget（包括其子类）对象被创建时，Qt会自动查找该对象中==**所有**==的槽函数，**如果槽函数的命名遵循`on_<objectName>_<signalName>`的模式，Qt将==自动==将这些槽连接到名称为`<objectName>`的对象发出的名为`<signalName>`的信号（也就是不通过写 `connect` 他就自动连接上了）。**
+>
+> 
+>
+> **为什么是错误倾向的？**
+>
+> 虽然这个特性可以简化某些情况下的信号与槽的连接过程，减少编码工作量，但它也带来了一些潜在的问题，这就是为什么Clazy（一个静态代码分析器）会发出警告：
+>
+> 1. **隐式行为可能导致错误**：自动连接是一个**隐式过程**，开发者可能不清楚某个槽函数是否被自动连接，或者错误地认为某个槽函数会被自动连接。这可能导致调试困难，因为行为的预期与实际可能不符。
+> 2. **重构风险**：**如果对象名称或信号名称在未来发生变化，与之相关的自动连接也会受到影响**，可能会导致槽不再被正确连接，而编译器不会报错，因为这些连接是在运行时解析的。
+> 3. **代码可读性降低**：对于不熟悉Qt自动连接机制的开发者来说，可能会对这种隐式的连接方式感到困惑，这影响了代码的清晰度和可维护性。
+
+根据应用的要求，我们需要确保用户可以打开图像文件。 成功打开图像文件后，我们会将路径写入`inputLineEdit`小部件的`text`属性，以便用户可以看到他们选择的完整文件名和路径。 首先让我们看一下代码的外观，然后逐步介绍它：
+
+```cpp
+void MainWindow::on_inputPushButton_clicked() 
+{ 
+  QString fileName = QFileDialog::getOpenFileName(
+    this, 
+    "Open Input Image", 
+    QDir::currentPath(), 
+    "Images (*.jpg *.png *.bmp)"); 
+
+   if(QFile::exists(fileName)) 
+   { 
+     ui->inputLineEdit->setText(fileName); 
+   } 
+} 
+```
+
+要访问用户界面上的小部件或其他元素，只需使用`ui`对象。例如，可以通过`ui`类并通过编写以下行来简单地访问用户界面中的`inputLineEdit`小部件：
+
+`ui-> inputLineEdit`
+
+第一行实际上是大代码的简化版本。 正如您将在本书中学习的那样，Qt 提供了许多方便的函数和类来满足日常编程需求，例如将它们打包成非常短的函数。 首先让我们看看我们刚刚使用了哪些 Qt 类：
+
+*   `QString`：这可能是 Qt 最重要和广泛使用的类别之一。 它代表 **Unicode 字符串**。 您可以使用它来存储，转换，修改字符串以及对字符串进行无数其他操作。 在此示例中，我们仅使用它来存储`QFileDialog`类读取的文件名。
+*   `QFileDialog`：可以用来选择计算机上的文件或文件夹。**它使用底层操作系统 API，因此对话框的外观可能有所不同，具体取决于操作系统。**
+*   `QDir`：此类可用于访问计算机上的文件夹并获取有关它们的各种信息。
+*   `QFile`：可用于访问文件以及从文件中读取或写入文件。
+
+前面提到的将是对每个类的非常简短的描述，并且如您从前面的代码中所见，它们每个都提供了更多的功能。 例如，我们仅在`QFile`中使用了静态函数来检查文件是否存在。 我们还使用了`QDir`类来获取当前路径（通常是应用从中运行的路径）。 代码中唯一需要更多说明的是`getOpenFileName`函数。 第一个参数应该是`parent`小部件。 这在 Qt 中非常重要，它用于自动清除内存，如果出现对话框和窗口，则要确定父窗口。 这意味着每个对象在销毁子对象时也应负责清理其子对象，如果是窗户，则由其父窗口打开它们。 因此，通过将`this`设置为第一个参数，我们告诉编译器（当然还有 Qt）此类负责`QFileDialog`类实例。 `getOpenFileName`函数的第二个参数显然是文件选择对话框窗口的标题，下一个参数是当前路径。 我们提供的最后一个参数可确保仅显示应用需求中的三种文件类型：`*.jpg`，`*.png`和`*.bmp`文件。
+
+仅当首先将其模块添加到您的项目中，然后将其头文件包含在您的源文件中时，才可以使用任何 Qt 类。 要将 Qt 模块添加到 Qt 项目，您需要在项目的`PRO`文件中添加类似于以下内容的行：
+
+`QT += module_name1 module_name2 module_name3 ...`
+
+`module_name1`等可以替换为可以在 Qt 文档中找到的每个类的实际 Qt 模块名称。
+您可能已经注意到项目的 PRO 文件中已经存在以下代码行：
+
+`QT += core gui`
+`greaterThan(QT_MAJOR_VERSION, 4): QT += widgets`
+
+这仅表示`core`和`gui`模块应包含在您的项目中。 它们是两个最基本的 Qt 模块，包括许多 Qt 基础类。第二行表示，如果您使用的 Qt 框架的主要版本号高于4，则还应包含`widgets`模块。 这是因为以下事实：在 Qt 5 之前，`widgets`模块是`gui`模块的一部分，因此无需将其包含在`PRO`文件中。
+至于头文件，它始终与类名本身相同。 因此，在我们的情况下，我们需要在源代码中添加以下类，以使前面的代码起作用。最好的位置通常是头文件的顶部，因此在我们的例子中就是`mainwindow.h`文件。 确保在顶部具有以下类别：
+
+`#include <QMainWindow>`
+`#include <QFileDialog>`
+`#include <QDir>`
+`#include <QFile>`
+
+尝试一下，然后运行程序以查看结果。然后，将其关闭并再次返回到设计器。现在，我们需要将代码添加到`outputPushButton`小部件。只需重复与`inputPushButton`相同的过程，但是这次，在`outputPushButton`上进行此操作，并为其编写以下代码：
+
+```cpp
+void MainWindow::on_outputPushButton_clicked() 
+{ 
+    QString fileName = QFileDialog::getSaveFileName(this, "Select output image", QDir::currentPath(), "*.jpg *.png *.bmp");
+
+    if (!fileName.isEmpty())
+    {
+        ui->leOutput->setText(fileName);
+        cv::Mat img_in = cv::imread(ui->leInput->text().toStdString());
+
+        cv::Mat img_out;
+        if (ui->rbtnMedianBlur->isChecked())
+        {
+            cv::medianBlur(img_in, img_out, 5);
+        }
+        else if (ui->rbtnGaussianBlur->isChecked())
+        {
+            cv::GaussianBlur(img_in, img_out, cv::Size(5, 5), 1.25);
+        }
+
+        cv::imwrite(fileName.toStdString(), img_out);
+        if (ui->cbDisplayAfterSave->isChecked())
+        {
+            cv::imshow("Output image", img_out);
+        }
+    }
+} 
+```
+
+您还需要向项目添加`OpenCV`标头。 将它们添加到`mainwindow.h`文件顶部的添加 Qt 类头的位置，如下所示：
+
+```cpp
+#include "opencv2/opencv.hpp"  
+```
+
+现在，让我们回顾一下我们刚刚编写的代码。这一次，我们在`QFileDialog`类和标题中使用了`getSaveFileName`函数，并且过滤器也有所不同。 这是必需的，以便用户在要保存输出图像时分别选择每种图像类型，而不是在打开它们时看到所有图像。 这次，**我们也没有检查文件的存在，因为这将由`QFileDialog`自动完成，**因此仅检查用户是否确实选择了某项就足够了。 在以下几行中，我们编写了一些特定于 OpenCV 的代码，在接下来的章节中，我们将越来越多地了解这些功能。我们将再次简短地讨论它们，并继续介绍 IDE 和`Hello_Qt_OpenCV`应用。
+
+1. **所有`OpenCV`函数都包含在`cv`名称空间中**，因此我们确保我们是 OpenCV `namespace cv`的`using`。 
+2. 然后，为了读取输入图像，我们使用了`imread`函数。这里要注意的重要一点是 **OpenCV 使用 C++ `std::string`类，而 Qt 的`QString`应该转换为该格式，否则，当您尝试运行该程序时会遇到错误。** 只需使用`QString`的`toStdString`函数即可完成。注意，在这种情况下，`QString`是`inputLineEdit`小部件的`text()`函数返回的值。
+3. 接下来，根据选择的过滤器类型，我们使用`medianBlur`或`gaussianBlur`函数进行简单的 OpenCV 过滤。*请注意，在这种情况下，我们为这些 OpenCV 函数使用了一些默认参数，但是如果我们使用小部件从用户那里获得它们，那就更好了。您将在章节“创建全面的 Qt + OpenCV 项目”中学习如何使用更多小部件，甚至创建自己的小部件。*
+4. 最后，已过滤的输出图像`img_out`被写入所选文件。 根据`displayImageCheckBox`小部件设置的条件也会显示它。
+
+
+
+到这个时候，我们还有两个要求：
+
+- 首先是，在关闭程序时将所有小部件的**状态保存在窗口中**，**并在重新打开程序时将其重新加载**。 
+- 另一个要求是在用户想要关闭程序时提示他们。 
+
+让我们从最后一个要求开始，因为这意味着我们需要知道如何编写在关闭窗口时需要执行的代码。这非常简单，因为 Qt 的`QMainWindow`类（我们的窗口所基于的类）是`QWidget`，并且它已经具有一个**虚函数**，我们可以覆盖和使用它。 只需将以下代码行添加到您的`MainWindow`类中：
+
+```cpp
+#include <QCloseEvent>  // 如果报错 `Member access into incomplete type 'QCloseEvent'` 可以添加头文件来解决
+
+...
+
+protected:
+	virtual void closeEvent(QCloseEvent* event); 
+```
+
+
+
+现在，切换到`mainwindow.cpp`并将以下代码段添加到文件末尾：
+
+```cpp
+void Hello_Qt_OpenCV::closeEvent(QCloseEvent* event)
+{
+    QMessageBox::StandardButton result =
+        QMessageBox::warning(this,
+                            "Exit",
+                            "Are you sure you want to close this program?",
+                            QMessageBox::No | QMessageBox::Yes,
+                            QMessageBox::No);
+
+    if (QMessageBox::No == result) event->accept();
+    else event->ignore();
+
+    QWidget::closeEvent(event);  // 向上传递
+}
+```
+
+我想您已经注意到我们现在又引入了两个 Qt 类，这意味着我们也需要将它们的包含标头添加到`mainwindow.h`。 考虑以下：
+
+*   `QMessageBox`：根据消息的目的，它可以用于显示带有简单图标，文本和按钮的消息
+*   `QCloseEvent`：这是许多 Qt 事件（`QEvent`）类之一，其目的是传递有关窗口关闭事件
+
+该代码几乎是不言自明的，因为您已经知道警告函数的第一个参数是什么。这是用来告诉 Qt 我们的`MainWindow`类负责此消息框。记录用户选择的结果，然后，基于此结果，关闭事件被接受或忽略。
+
+
+
+除此之外，我们仍然**需要保存设置**（小部件上的文本以及复选框和单选框的状态）并加载它们。如您所知，保存设置的最佳位置是`closeEvent`函数。 在代码的`event->accept();`行之前怎么样？让我们向`MainWindow`类添加两个私有函数，一个私有函数加载名为`loadSettings`的设置，另一个私有函数保存名为`saveSettings`的设置。
+
+在本章中，我们将学习最后一个 Qt 类，它称为`QSettings`。因此，首先将其包含行添加到`mainwindow.h`中，然后将以下两个函数定义添加到`MainWindow`类中，再次在`Ui::MainWindow *ui;`行正下方的`mainwindow.h`中，在私有成员中：
+
+```cpp
+void loadSettings(); 
+void saveSettings(); 
+```
+
+这是给`saveSettings`的：
+
+```cpp
+void Hello_Qt_OpenCV::saveSettings()
+{
+    QSettings settings("Packt", "Hello_OpenCV_Qt", this);
+
+    settings.setValue("leInput", ui->leInput->text());
+    settings.setValue("leOutput", ui->leOutput->text());
+    settings.setValue("rbtnMedianBlur", ui->rbtnMedianBlur->isChecked());
+    settings.setValue("rbtnGaussianBlur", ui->rbtnGaussianBlur->isChecked());
+    settings.setValue("cbDisplayAfterSave", ui->cbDisplayAfterSave->isChecked());
+}
+```
+
+这是`loadSettings`函数所需的代码：
+
+```cpp
+void Hello_Qt_OpenCV::loadSettings()
+{
+    QSettings settings("Packt", "Hello_OpenCV_Qt", this);
+    ui->leInput->setText(settings.value("leInput", "").toString());
+    ui->leOutput->setText(settings.value("leOutput", "").toString());
+    ui->rbtnMedianBlur->setChecked(settings.value("rbtnMedianBlur", true).toBool());
+    ui->rbtnGaussianBlur->setChecked(settings.value("rbtnGaussianBlur", false).toBool());
+    ui->cbDisplayAfterSave->setChecked(settings.value("cbDisplayAfterSave", false).toBool());
+}
+```
+
+
+
+在构建 `QSettings` 类时，你需要提供一个组织名称（仅作为示例，我们使用了“Packt”）和一个应用程序名称（在我们的例子中是“Hello_Qt_OpenCV”）。然后，它会记录你传递给 `setValue` 函数的任何内容，并通过 `value` 函数返回它。我们所做的就是简单地将我们想要保存的所有内容传递给 `setValue` 函数，例如 Line Edit 控件中的文本等等，需要时再重新加载它。**请注意，像这样使用 `QSettings` 时，它会自己处理存储位置，并使用每个操作系统的默认位置来保持应用程序特定的配置。**
+
+现在，只需将 `loadSettings` 函数添加到 `MainWindow` 类的构造函数中。你应该有一个看起来像这样的构造函数：
+
+```cpp
+ui->setupUi(this);
+loadSettings();
+```
+
+在 closeEvent 中，紧接在 `event->accept()` 之前添加 `saveSettings` 函数，就是这样。我们现在可以尝试运行我们的第一个应用程序了。让我们尝试运行并过滤一个图像。选择两种滤镜中的每一种，并查看它们之间的区别。尝试玩转应用程序并找出其问题。尝试通过添加更多参数来改进它，等等。以下是应用程序运行时的屏幕截图：
+
+![](doc/img/802ca071-f806-4b88-a793-79d4753b30e0-1724430.png)
+
+尝试关闭它，并使用我们的退出确认代码查看一切是否正常。
+
+![](doc/img/3d9ac50d-0203-4e84-b410-36a70d9dc138-1724430.png)
+
+我们编写的程序显然并不完美，但是它列出了您从 Qt Creator IDE 入门到本书各章所需要了解的几乎所有内容。 Qt Creator 中还有另外三个`Modes`尚未见过，我们将把调试模式和项目模式留给第 12 章，“Qt Quick 应用”，其中我们将深入研究构建，测试和调试计算机视觉应用的概念。 因此，让我们简要地通过 Qt Creator 的非常重要的“帮助”模式以及`Options`之后，结束我们的 IDE 之旅。
 
 
 
