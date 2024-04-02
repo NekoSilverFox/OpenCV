@@ -1002,7 +1002,7 @@ ui->setupUi(this);
 loadSettings();
 ```
 
-在 closeEvent 中，紧接在 `event->accept()` 之前添加 `saveSettings` 函数，就是这样。我们现在可以尝试运行我们的第一个应用程序了。让我们尝试运行并过滤一个图像。选择两种滤镜中的每一种，并查看它们之间的区别。尝试玩转应用程序并找出其问题。尝试通过添加更多参数来改进它，等等。以下是应用程序运行时的屏幕截图：
+在 `closeEvent` 中，紧接在 `event->accept()` 之前添加 `saveSettings` 函数，就是这样。我们现在可以尝试运行我们的第一个应用程序了。让我们尝试运行并过滤一个图像。选择两种滤镜中的每一种，并查看它们之间的区别。尝试玩转应用程序并找出其问题。尝试通过添加更多参数来改进它，等等。以下是应用程序运行时的屏幕截图：
 
 ![](doc/img/802ca071-f806-4b88-a793-79d4753b30e0-1724430.png)
 
@@ -1014,7 +1014,177 @@ loadSettings();
 
 
 
+## 帮助模式
+
+使用 Qt Creator 左侧的帮助按钮切换到帮助模式：
+
+![](doc/img/4e4a85a0-824e-4b03-a901-c3dca818993f.png)
+
+ 关于 Qt Creator 帮助模式最重要的一点，除了你可以字面上搜索与 Qt 相关的一切内容，并且能看到每个类和模块的无数示例外，就是你必须使用它来找出每个类所需的正确模块。要做到这一点，只需切换到索引模式并搜索你想在应用程序中使用的 Qt 类。这里有一个示例： 
+
+<img src="doc/img/986b0acf-0507-43d1-8b74-0b7a0ba0f9eb.png" style="zoom:50%;" />
+
+如你所见，可以使用索引并搜索它来轻松访问 `QMessageBox` 类的文档页面。注意描述之后的前两行：
+
+```cpp
+#include <QMessageBox> 
+QT += widgets 
+```
+
+这基本上意味着，为了在项目中使用`QMessageBox`，必须在源文件中包含`QMessageBox`头文件，并将小部件模块添加到`PRO`文件中。 尝试搜索本章中使用的所有类，然后在文档中查看其示例。 Qt Creator 还提供了非常强大的上下文相关帮助。 您只需在任何 Qt 类上用鼠标单击`F1`，它的文档页面都将在编辑模式下的代码编辑器中获取：
+
+<img src="doc/img/be421df1-8073-4360-a36a-f78d3d685d1b.png" style="zoom:50%;" />
+
+## Qt Creator 选项窗口设置
+
+您可以通过点击主菜单中的“工具(Tools)”然后选择“选项(Options)”来访问 Qt Creator 的选项窗口。Qt Creator 允许非常高级别的自定义，因此您会发现其选项页面和标签页中有相当多的参数可以配置。对于大多数人（包括我自己）而言，Qt Creator 的默认选项几乎足以满足他们需要做的所有事情，但有些任务如果不知道如何配置 IDE，您将无法完成。请参考下面的截图：
+
+![](doc/img/d9c5fbd0-b530-4bc6-870d-12166f59a36a.png)
+
+您可以使用左侧的按钮在页面之间切换。每个页面包含多个标签，但它们都属于同一组。以下是每组选项主要用途：
+
+- 环境(Environment)：这包含了与 Qt Creator 的整体外观和感觉相关的设置。在这里您可以更改主题（这在本章开头提到过）、字体和文字大小、语言及其所有设置。
+- 文本编辑器(Text Editor)：这组设置包括所有与代码编辑器相关的内容。这里您可以更改诸如代码高亮、代码补全等设置。
+- FakeVim：这是针对熟悉 Vim 编辑器的人的。在这里，他们可以在 Qt Creator 中启用 Vim 风格的代码编辑并进行配置。
+- 帮助(Help)：正如可以猜测的，这包含了与 Qt Creator 的帮助模式和上下文敏感帮助功能相关的所有选项。
+- C++：在这里，您可以找到与 C++ 编码和代码编辑相关的设置。
+- Qt Quick：影响 Qt Quick 设计师和 QML 代码编辑的选项可以在这里找到。我们将在[第12章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#b9aca949-902f-4857-bcd8-10e894b060f1.xhtml)，*Qt Quick 应用程序*中了解更多关于 QML 的信息。
+- 构建与运行(Build & Run)：这可能是 Qt Creator 中最重要的选项页面。这里的设置直接影响您的应用程序构建和运行体验。我们将在[第11章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee)，*链接和部署*中配置一些设置，届时您将学习到 Qt 的静态链接。
+- 调试器(Debugger)：这包含了与 Qt Creator 的调试模式相关的设置。您将在[第10章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#b9aca949-902f-4857-bcd8-10e894b060f1.xhtml)，*调试和测试*中了解更多此内容。
+- 设计师(Designer)：这可以用来配置 Qt Creator 模板项目和与设计模式相关的其他设置。
+- 分析器(Analyzer)：这包括与 Clang 代码分析器、QML 分析器等相关的设置。覆盖它们超出了本书的范围。
+- 版本控制(Version Control)：Qt 提供了与许多版本控制系统（如 Git 和 SVN）的非常可靠的集成。在这里，您可以配置 Qt Creator 中所有与版本控制相关的设置。
+- 设备(Devices)：正如您将在[第12章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#b9aca949-902f-4857-bcd8-10e894b060f1.xhtml)，*Qt Quick 应用程序*中看到的，您将使用它来为 Android 开发配置 Qt Creator，包括与设备相关的所有设置。
+- 代码粘贴(Code Pasting)：这可以用来配置 Qt Creator 用于诸如代码共享等任务的一些第三方服务。
+
+- Qbs：完全超出了我们书籍的范围，我们不需要它。
+- 测试设置(Test Settings)：这包含与 Qt Test 等相关的设置。我们将在[第10章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#f0a54017-431b-4ae5-acf3-f19f15133025.xhtml)，*调试和测试*中介绍 Qt Test，在那里您将学习如何为我们的 Qt 应用程序编写单元测试。
+
+除此之外，您始终可以使用 Qt Creator 的过滤工具(Filter tool)立即定位到您在选项窗口中需要的设置：
+
+![](doc/img/e1bc1c80-c2e9-4cb7-8e56-49eb86cc4b21.png)
+
+## 总结
+
+本章更多的是对 Qt Creator 的介绍，而这正是我们为了能够舒适地继续进行下一章节所需要的，集中精力构建东西，而不是重复的指令和配置技巧和提示。我们学习了如何使用 Qt Creator 设计用户界面和为用户界面编写代码。我们被介绍到了一些最广泛使用的 Qt 类以及它们是如何在不同模块中打包的。通过学习不同的 Qt Creator 模式并同时构建一个应用程序，我们现在可以通过自己的练习来提升，甚至改进我们写的应用程序。下一章将是我们构建一个可扩展的插件式计算机视觉应用程序骨架的章节，这将几乎持续到本书的最后几章。在下一章中，我们将学习 Qt 和 OpenCV 中不同的设计模式，以及我们如何使用类似的模式来构建易于维护和扩展的应用程序。
 
 
 
+# 创建一个全面的 Qt+OpenCV 项目
+
+专业的应用程序之所以专业，并不是因为一些随机的情况，而是从一开始就是这样设计的。当然，说起来容易做起来难，但如果你已经知道了如何创建可以轻松扩展、维护、扩大规模和自定义的应用程序的黄金法则，那么这实际上还是相当容易的。这里的黄金法则只有一个简单的概念，幸运的是，Qt 框架已经有了实现它的手段，那就是以模块化的方式构建应用程序。请注意，在这里模块化不仅仅意味着库或不同的源代码模块，而是意味着应用程序的每个职责和能力都是独立于其他职责和能力创建和构建的。这实际上正是 Qt 和 OpenCV 本身创建的方式。一个模块化的应用程序可以很容易地扩展，即使是不同背景的不同开发者也是如此。一个模块化的应用程序可以扩展以支持许多不同的语言、主题（样式或外观），或者更好的是，许多不同的功能。
+
+在本章中，我们将承担一个非常重要和关键的任务，即为使用 Qt 和 OpenCV 框架的全面计算机视觉应用程序构建基础设施（或架构）。**你将学习如何创建即使在部署后（交付给用户）也可以扩展的 Qt 应用程序。这实际上意味着许多事情，包括如何向应用程序添加新语言、如何向应用程序添加新样式，最重要的是，如何构建一个基于插件的 Qt 应用程序，通过添加新插件来扩展它。**
+
+我们将从了解构建 Qt 应用程序时一般背后的情况开始，通过浏览 Qt 项目的结构和包含的文件。然后，我们将了解 Qt 和 OpenCV 中最广泛使用的设计模式，以及这两个框架如何享受使用这些设计模式的优势。然后，我们将学习如何创建一个可以通过插件扩展的应用程序。我们还将学习如何向我们的应用程序添加新样式和新语言。到本章结束时，我们将能够创建一个全面的计算机视觉应用程序的基础，该应用程序是跨平台的、多语言的、基于插件的，并具有可定制的外观和感觉。这个基础应用程序将在接下来的两章中扩展，[第4章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#f36fb509-ba51-4ed5-8896-8ee2c5027910.xhtml)，*Mat 和 QImage*，以及[第5章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#23154d9b-43b1-411a-874a-d82e2a904927.xhtml)，*图形视图框架*，并在之后使用插件扩展本书的其余部分，特别是在[第6章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#e4effd35-71cb-4b71-a945-62bce820a80e.xhtml)，*OpenCV 中的图像处理*之后，当我们开始真正深入计算机视觉主题和 OpenCV 库时。
+
+在本章中，我们将覆盖以下主题：
+
+- Qt 项目的结构和 Qt 构建过程
+- Qt 和 OpenCV 中的设计模式
+- Qt 应用程序中的样式
+- Qt 应用程序中的语言
+- 如何使用 Qt Linguist 工具
+- 如何在 Qt 中创建和使用插件
+
+# 背景
+
+在[第2章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#9009a91a-b569-44fc-b9b4-a5f6a8421ba8.xhtml)，*创建我们的第一个 Qt 和 OpenCV 项目*中，你学习了如何创建一个简单的 Qt+OpenCV 应用程序，名为 Hello_Qt_OpenCV。这个项目包含了 Qt 提供的几乎所有基本功能，尽管我们没有详细讨论我们的项目是如何构建成一个具有用户界面和（几乎可以接受的）行为的应用程序的。在本节中，你将了解当我们点击运行按钮时背后发生了什么。这将帮助我们更好地了解 Qt 项目的结构和项目文件夹中每个文件的用途。让我们开始打开项目文件夹，逐个查看几个文件。因此，我们在 Hello_Qt_OpenCV 文件夹中有以下内容：
+
+```
+cssCopy code
+Hello_Qt_OpenCV.pro
+Hello_Qt_OpenCV.pro.user
+main.cpp
+mainwindow.cpp
+mainwindow.h
+mainwindow.ui
+```
+
+Hello_Qt_OpenCV.pro 文件基本上是 Qt 在构建我们的项目时首先处理的文件。这称为**Qt 项目文件**，一个名为 qmake 的内部 Qt 程序负责处理它。让我们看看它是什么。
+
+# qmake 工具
+
+qmake 工具是一个帮助使用 *.pro 文件中的信息创建 makefile 的程序。这简单地意味着，使用非常简单的语法（与其他 make 系统中的更复杂语法相比），qmake 生成了编译和构建应用程序所需的所有必要命令，并将所有这些生成的文件放在 Build 文件夹中。
+
+当构建 Qt 项目时，它首先创建一个新的构建文件夹，默认情况下，该文件夹与项目文件夹位于同一级别。在我们的例子中，这个文件夹应该有一个类似于 build-Hello_Qt_OpenCV-Desktop_Qt_5_9_1_*-Debug 的名称，其中 * 可能会有所不同，取决于平台，你可以在项目文件夹所在的同一个文件夹中找到它。Qt（使用 qmake 和本章中您将了解到的一些其他工具）和 C++ 编译器生成的所有文件位于此文件夹及其子文件夹中。这称为项目的构建文件夹。这也是您的应用程序被创建和执行的地方。例如，如果您使用的是 Windows，您可以在 Build 文件夹的 debug 或 release 子文件夹中找到 Hello_Qt_OpenCV.exe 文件（以及许多其他文件）。因此，从现在开始我们将称这个文件夹（及其子文件夹）为构建文件夹。
+
+例如，我们已经知道在我们的 Qt 项目文件中包含以下行会导致将 Qt 的 core 和 gui 模块添加到我们的应用程序中：
+
+```
+makefileCopy code
+QT += core gui
+```
+
+让我们进一步查看 Hello_Qt_OpenCV.pro 文件；以下几行立即引人注意：
+
+```
+makefileCopy code
+TARGET = Hello_Qt_OpenCV
+TEMPLATE = app
+```
+
+这几行简单地意味着 TARGET 名称是 Hello_Qt_OpenCV，这是我们项目的名称，TEMPLATE 类型 app 意味着我们的项目是一个应用程序。我们还有以下内容：
+
+```
+makefileCopy code
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp
+HEADERS += \
+    mainwindow.h
+FORMS += \
+    mainwindow.ui
+```
+
+很明显，这就是头文件、源文件和用户界面文件（表单）如何包含在我们的项目中的方式。我们甚至向项目文件中添加了我们自己的代码，如下所示：
+
+```
+makefileCopy code
+win32: {
+  include("c:/dev/opencv/opencv.pri")
+}
+unix: !macx{
+  CONFIG += link_pkgconfig
+  PKGCONFIG += opencv
+}
+unix: macx{
+  INCLUDEPATH += "/usr/local/include"
+  LIBS += -L"/usr/local/lib" \
+-lopencv_world
+}
+```
+
+你已经学会了这是 Qt 如何看到 OpenCV 并在 Qt 项目中使用它的方式。搜索 Qt 帮助索引中的 qmake 手册以获取有关 qmake 中所有可能的命令和函数以及更详细的工作方式的更多信息。
+
+在 qmake 处理了我们的 Qt 项目文件后，它开始寻找项目中提到的源文件。自然地，每个 C++ 程序在其源文件中都有一个 main 函数（一个单一且唯一的 main 函数）（不在头文件中），我们的应用程序也不例外。我们应用程序的 main 函数由 Qt Creator 自动生成，它位于 main.cpp 文件中。让我们打开 main.cpp 文件，看看它包含什么：
+
+```
+arduinoCopy code
+#include "mainwindow.h"
+#include <QApplication>
+int main(int argc, char *argv[])
+{
+  QApplication a(argc, argv);
+  MainWindow w;
+  w.show();
+  return a.exec();
+}
+```
+
+前两行用于包含我们当前的 mainwindow.h 头文件和 QApplication 头文件。QApplication 类是负责控制应用程序的控制流、设置等的主类。您在 main 函数中看到的，是 Qt 创建事件循环以及其底层信号/槽机制和事件处理系统工作方式的基础：
+
+```
+scssCopy code
+QApplication a(argc, argv);
+MainWindow w;
+w.show();
+return a.exec();
+```
+
+最简单地描述，就是创建了 QApplication 类的一个实例，并将应用程序参数（通常通过命令行或终端传递）传递给名为 a 的新实例。然后，创建了我们的 MainWindow 类的一个实例，然后显示它。最后，调用 QApplication 类的 exec() 函数，以便应用程序进入主循环，并保持打开状态，直到窗口关闭。
+
+要了解事件循环的真正工作方式，请尝试删除最后一行，看看会发生什么。当你运行你的应用程序时，你可能会注意到窗口实际上显示了非常短暂的时间，然后立即关闭。这是因为我们的应用程序不再有事件循环，它立即到达应用程序的结尾，内存中的所有内容都被清除了，因此窗口被关闭。现在，重新写回那行代码，正如你所期待的，窗口保持打开状态，因为 exec() 函数只有在代码中某处（任何地方）调用了 exit() 函数时才返回，并且它返回 exit() 设置的值。
+
+现在，让我们继续讨论具有相同名称但扩展名不同的接下来的三个文件。它们是 mainwindow 头文件、源文件和用户界面文件。您现在将了解负责我们在[第2章](https://chat.openai.com/g/g-5bNPpaVZy-translate-gpt/c/404a8935-fdf1-49ee-ae89-e736013318ee#9009a91a-b569-44fc-b9b4-a5f6a8421ba8.xhtml)，*创建我们的第一个 Qt 和 OpenCV 项目*中创建的应用程序的代码和用户界面的实际文件。这使我们了解到另外两个 Qt 内部工具，称为**元对象编译器**和**用户界面编译器**。
 
