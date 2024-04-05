@@ -13,6 +13,36 @@
   <property name="windowTitle">
    <string>Hello_Qt_OpenCV</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">* 
+{ 
+  font: 75 11pt; 
+  background-color: rgb(220, 220, 220); 
+} 
+QPushButton, QLineEdit, QGroupBox 
+{ 
+  border: 2px solid rgb(0, 0, 0); 
+  border-radius: 10px; 
+  min-width: 80px; 
+  min-height: 35px; 
+} 
+QPushButton 
+{ 
+  background-color: rgb(0, 255, 0); 
+} 
+QLineEdit 
+{ 
+  background-color: rgb(0, 170, 255); 
+} 
+  QPushButton:hover, QRadioButton:hover, QCheckBox:hover 
+{ 
+   color: red; 
+} 
+QPushButton:!hover, QRadioButton:!hover, QCheckBox:!hover 
+{ 
+  color: black; 
+} </string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
