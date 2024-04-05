@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QTranslator>
 
 
 QT_BEGIN_NAMESPACE
@@ -18,6 +19,7 @@ public:
     ~Hello_Qt_OpenCV();
 
 protected:
+    virtual void changeEvent(QEvent *event);
     virtual void closeEvent(QCloseEvent* event);
 
 private:
@@ -28,7 +30,14 @@ private slots:
     void on_btnInput_clicked();
     void on_btnOutput_clicked();
 
+    void on_actionChinese_triggered();
+    void on_actionRussia_triggered();
+    void on_actionEnglish_triggered();
+
 private:
     Ui::Hello_Qt_OpenCV *ui;
+
+    QTranslator* translator_ru;
+    QTranslator* translator_zh_CN;
 };
 #endif // HELLO_QT_OPENCV_H

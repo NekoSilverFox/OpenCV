@@ -2,4 +2,8 @@
     <qresource prefix="/img">
         <file alias="icon">nekosilverfox.png</file>
     </qresource>
+    <qresource prefix="/lanugage">
+        <file>translation_ru.qm</file>
+        <file>translation_zh_CN.qm</file>
+    </qresource>
 </RCC>

@@ -41,3 +41,5 @@ unix: macx {
 
 RESOURCES += \
     resources.qrc
+
+TRANSLATIONS = translation_ru.ts translation_zh_CN.ts

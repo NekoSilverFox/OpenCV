@@ -16,6 +16,12 @@ Hello_Qt_OpenCV::Hello_Qt_OpenCV(QWidget *parent)
 
     loadSettings();  // 加载上次用户退出时的状态
 
+    translator_ru = new QTranslator(this);
+    translator_ru->load(":/lanugage/translation_ru.qm");
+
+    translator_zh_CN = new QTranslator(this);
+    translator_zh_CN->load(":/lanugage/translation_zh_CN.qm");
+
     // connect(ui->btnInput, &QPushButton::clicked, this, &Hello_Qt_OpenCV::on_btnInput_clicked);
 
 
@@ -71,18 +77,40 @@ void Hello_Qt_OpenCV::closeEvent(QCloseEvent* event)
 {
     QMessageBox::StandardButton result =
         QMessageBox::warning(this,
-                            "Exit",
-                            "Are you sure you want to close this program?",
+                            tr("Exit"),
+                            tr("Are you sure you want to close this program?"),
                             QMessageBox::No | QMessageBox::Yes,
                             QMessageBox::No);
 
-    if (QMessageBox::No == result) event->accept();
-    else event->ignore();
+    if (QMessageBox::Yes == result)
+    {
+        event->accept();
+        QWidget::closeEvent(event);  // 向上传递，关闭事件交给父对象处理（直接调用这一句就会导致窗口关闭）
+    }
+    else
+    {
+        event->ignore();
+    }
 
     saveSettings();  // 保存用户退出时的状态
 
-    QWidget::closeEvent(event);  // 向上传递
+
+
 }
+
+
+void Hello_Qt_OpenCV::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+    {
+        ui->retranslateUi(this);
+    }
+    else
+    {
+        QMainWindow::changeEvent(event); // 否则，一切应该像平时一样进行
+    }
+}
+
 
 /** 保存用户设置
  * @brief Hello_Qt_OpenCV::saveSettings
@@ -112,4 +140,22 @@ void Hello_Qt_OpenCV::loadSettings()
 }
 
 
+
+void Hello_Qt_OpenCV::on_actionChinese_triggered()
+{
+    qApp->installTranslator(this->translator_zh_CN);
+}
+
+
+void Hello_Qt_OpenCV::on_actionRussia_triggered()
+{
+    qApp->installTranslator(this->translator_ru);
+}
+
+
+void Hello_Qt_OpenCV::on_actionEnglish_triggered()
+{
+    qApp->removeTranslator(this->translator_zh_CN);
+    qApp->removeTranslator(this->translator_ru);
+}
 

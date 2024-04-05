@@ -129,6 +129,40 @@ QPushButton:!hover, QRadioButton:!hover, QCheckBox:!hover
     </item>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>647</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuLanguage">
+    <property name="title">
+     <string>Language</string>
+    </property>
+    <addaction name="actionRussia"/>
+    <addaction name="actionChinese"/>
+    <addaction name="actionEnglish"/>
+   </widget>
+   <addaction name="menuLanguage"/>
+  </widget>
+  <action name="actionRussia">
+   <property name="text">
+    <string>🇷🇺Russia</string>
+   </property>
+  </action>
+  <action name="actionChinese">
+   <property name="text">
+    <string>🇨🇳Chinese</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>🇺🇸English</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
