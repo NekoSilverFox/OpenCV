@@ -38,3 +38,6 @@ unix: macx {
   LIBS += -L"/usr/local/lib" \
    -lopencv_world
 }
+
+RESOURCES += \
+    resources.qrc
