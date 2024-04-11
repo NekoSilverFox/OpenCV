@@ -20,7 +20,16 @@
 
 [toc]
 
-
+> 如果你不了解 Qt 这个框架，建议先学习：
+>
+> - 关于 Qt 无比详细教程及案例实现：[https://github.com/NekoSilverFox/Qt](https://github.com/NekoSilverFox/Qt)
+>     其中不仅涵盖了 Qt 基本控件的使用及讲解，还包含了大学和培训机构不会讲到的：插件设计及实现、基于 QTest 的静态动态、动态测试、CI/CD的使用、Qt 函数/方法注意事项等
+>
+> 
+>
+> 如果你对 OpenGL 计算机图形学感兴趣：
+>
+> - 基于 Qt & OpenGL 的案例实现及详细教程：[https://github.com/NekoSilverFox/OpenGL](https://github.com/NekoSilverFox/OpenGL
 
 # 前言
 
@@ -1834,13 +1843,13 @@ Q_DECLARE_INTERFACE(CvPluginInterface, CVPLUGININTERFACE_IID)  // 宏将我们�
 
 ![](doc/img/09784656-31f1-4aba-ac38-30ec71d92381.png)
 
-我们需要告诉Qt这是一个插件而不仅仅是任何库。为此，我们需要在我们的`*.PRO`文件中添加以下内容。你可以在项目中的任何地方添加它，但最好的做法是添加到`TEMPLATE = lib`行：
+我们需要告诉Qt这是一个插件而不仅仅是任何库。为此，我们需要在我们的`*.pro`文件中添加以下内容
 
 ```plaintext
 CONFIG += plugin 
 ```
 
-现在，我们需要将OpenCV添加到我们的插件项目中。到目前为止，这对你来说应该是小菜一碟。只需像之前在`Hello_Qt_OpenCV`项目中所做的那样，将以下内容添加到你的插件的`*.PRO`文件中：
+现在，我们需要将OpenCV添加到我们的插件项目中。到目前为止，这对你来说应该是小菜一碟。只需像之前在`Hello_Qt_OpenCV`项目中所做的那样，将以下内容添加到你的插件的`*.pro`文件中：
 
 ```cpp
 win32: {
@@ -1860,7 +1869,7 @@ unix: macx {
 }
 ```
 
-当你在`*.PRO`文件中添加一些代码，或者使用Qt Creator主菜单（和其他用户界面快捷方式）添加新类或Qt资源文件时，手动运行`qmake`是一个非常好的习惯，特别是如果你注意到Qt Creator与你的项目内容不同步。你可以通过选择`项目`窗格的右键菜单中的`运行qmake`来轻松做到这一点，如下图所示：
+当你在`*.pro`文件中添加一些代码，或者使用Qt Creator主菜单（和其他用户界面快捷方式）添加新类或Qt资源文件时，手动运行`qmake`是一个非常好的习惯，特别是如果你注意到Qt Creator与你的项目内容不同步。你可以通过选择`项目`窗格的右键菜单中的`运行qmake`来轻松做到这一点，如下图所示：
 
 ![](doc/img/d98f4e88-7fdd-470a-89d5-4f7efac2936a.png)
 
@@ -1934,8 +1943,7 @@ public:
       cv::Mat &outputImage) 
     { 
       cv::medianBlur(inputImage, outputImage, 5); 
-    } 
-    
+    }
     ```
 
     我们刚刚添加了类析构函数、`description`和`processImage`函数的实现。如你所见，
@@ -1951,9 +1959,9 @@ public:
 
 
 
-# 插件加载器和用户
+### 插件加载器和用户
 
-现在，我们将使用上一节书中创建的插件。首先，创建一个新的 Qt Widgets 应用项目。让我们将其命名为 `Plugin_User`。当项目创建好后，首先在 \*.PRO 文件中添加 OpenCV 框架（你已经见过很多次了），然后继续创建一个类似于下面这样的用户界面：
+现在，我们将使用上一节书中创建的插件。首先，创建一个新的 Qt Widgets 应用项目。让我们将其命名为 `Plugin_User`。当项目创建好后，首先在 `*.pro` 文件中添加 OpenCV 框架（你已经见过很多次了），然后继续创建一个类似于下面这样的用户界面：
 
 1. 显然，你需要修改 `mainwindow.ui` 文件，设计它使其看起来像下图一样，并设置所有对象名称，如下图所示：
 
@@ -2215,7 +2223,7 @@ void MainWindow::on_inputImgButton_pressed()
 
 # 插件加载器和用户
 
-现在，我们将使用上一节中创建的插件。首先，创建一个新的 Qt Widgets Application 项目。我们将其命名为 Plugin_User。项目创建后，首先将 OpenCV 框架添加到 \*.PRO 文件中（你已经见过很多次了），然后开始创建类似于下面的用户界面：
+现在，我们将使用上一节中创建的插件。首先，创建一个新的 Qt Widgets Application 项目。我们将其命名为 Plugin_User。项目创建后，首先将 OpenCV 框架添加到 \*.pro 文件中（你已经见过很多次了），然后开始创建类似于下面的用户界面：
 
 1. 显然，你需要修改 `mainwindow.ui` 文件，设计它使其看起来像下图，并设置所有对象名称，如下图所示：
 
